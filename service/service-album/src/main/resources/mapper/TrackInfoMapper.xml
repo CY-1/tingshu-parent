@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.atguigu.tingshu.album.mapper.TrackInfoMapper">
+    <select id="selectUserTrackPage" resultType="com.atguigu.tingshu.vo.album.TrackListVo">
+        select
+            ai.id albumId,
+            ai.album_title albumTitle,
+            ti.id trackId,
+            ti.track_title trackTitle,
+            if(ti.cover_url is null or ti.cover_url = '', ai.cover_url, ti.cover_url) as coverUrl,
+            ti.media_duration mediaDuration,
+            ti.`status` `status`,
+            MAX(IF(ts.stat_type = '0701', ts.stat_num, 0)) as playStatNum,
+            MAX(IF(ts.stat_type = '0702', ts.stat_num, 0)) as collectStatNum,
+            MAX(IF(ts.stat_type = '0703', ts.stat_num, 0)) as praiseStatNum,
+            MAX(IF(ts.stat_type = '0704', ts.stat_num, 0)) as commentStatNum
+        from track_info ti
+                 INNER JOIN album_info ai
+                            on ai.id=ti.album_id
+                 left join track_stat ts
+                           on ts.track_id=ti.id
+        <where>
+            <if test="vo.userId != null">
+                and ti.user_id = #{vo.userId}
+            </if>
+            <if test="vo.trackTitle != null and vo.trackTitle != ''">
+                and ti.track_title like CONCAT('%',#{vo.trackTitle},'%')
+            </if>
+            <if test="vo.status != null and vo.status != ''">
+                and ti.status = #{vo.status}
+            </if>
+            and ti.is_deleted = 0
+        </where>
+        GROUP BY ti.id
+        order by ti.album_id ,ti.order_num
+    </select>
+</mapper>
+

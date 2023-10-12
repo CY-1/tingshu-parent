@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<mapper namespace="com.atguigu.tingshu.album.mapper.AlbumInfoMapper">
+
+        <select id="selectUserAlbumPage" resultType="com.atguigu.tingshu.vo.album.AlbumListVo">
+
+            select
+            info.id albumId,
+            info.album_title,
+            info.cover_url,
+            info.include_track_count,
+            info.is_finished,
+            info.`status`,
+            MAX(IF(info2.stat_type = '0401', info2.stat_num, 0)) as playStatNum,
+            MAX(IF(info2.stat_type = '0402', info2.stat_num, 0)) as subscribeStatNum,
+            MAX(IF(info2.stat_type = '0403', info2.stat_num, 0)) as buyStatNum,
+            MAX(IF(info2.stat_type = '0404', info2.stat_num, 0)) as albumCommentStatNum
+
+            from album_info info left join album_stat info2
+            on info2.album_id=info.id
+            <where>
+                <if test="albumInfoQuery.userId!=null">
+                    info.user_id=#{albumInfoQuery.userId}
+                </if>
+                <if test="albumInfoQuery.status!=null and albumInfoQuery.status!=''">
+                    and info.status=#{albumInfoQuery.status}
+                </if>
+                <if test="albumInfoQuery.albumTitle!=null and albumInfoQuery.albumTitle!=''">
+                    and info.album_title like CONCAT('%',#{vo.albumTitle},'%')
+                </if>
+                and info.is_deleted=0
+            </where>
+            GROUP BY info.id
+        </select>
+</mapper>
+
