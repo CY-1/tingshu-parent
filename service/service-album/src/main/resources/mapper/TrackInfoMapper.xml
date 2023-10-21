@@ -5,6 +5,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 
 <mapper namespace="com.atguigu.tingshu.album.mapper.TrackInfoMapper">
+    <!--更新统计状态-->
+    <update id="updateStat">
+        update track_stat
+        set stat_num = stat_num + #{count}
+        where track_id = #{trackId} and stat_type = #{statType}
+    </update>
     <select id="selectUserTrackPage" resultType="com.atguigu.tingshu.vo.album.TrackListVo">
         select
             ai.id albumId,
@@ -37,6 +43,32 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         </where>
         GROUP BY ti.id
         order by ti.album_id ,ti.order_num
+    </select>
+    <select id="selectAlbumTrackPage" resultType="com.atguigu.tingshu.vo.album.AlbumTrackListVo">
+        select
+            ti.id trackId  ,
+            ti.track_title trackTitle,
+            ti.media_duration mediaDuration,
+            ti.order_num orderNum,
+            max(if(ts.stat_type="0701",ts.stat_num,0)) playStatNum,
+            max(if(ts.stat_type="0704",ts.stat_num,0)) commentStatNum,
+            ti.create_time
+        from track_info ti
+                 left join track_stat ts on ti.id=ts.track_id
+        where album_id=#{albumId} and ti.is_open = '1' and ti.status = '0501'
+        group by ti.id
+        order by orderNum asc
+    </select>
+    <select id="selectTrackStat" resultType="com.atguigu.tingshu.vo.album.TrackStatVo"
+            parameterType="java.lang.Long">
+        select
+            max(if(stat_type="0701",stat_num,0)) playStatNum
+             ,max(if(stat_type="0702",stat_num,0)) collectStatNum
+             ,max(if(stat_type="0703",stat_num,0)) praiseStatNum
+             ,max(if(stat_type="0704",stat_num,0)) commentStatNum
+        from
+            track_stat where track_id=#{trackId}
+        group by track_id
     </select>
 </mapper>
 

@@ -1,5 +1,5 @@
 server:
-  port: 8501
+  port: 8511
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
@@ -27,7 +27,7 @@ spring:
       port: 6379
       database: 0
       timeout: 1800000
-      password:
+      password: 1234
       jedis:
         pool:
           max-active: 20 #最大连接数
@@ -71,15 +71,15 @@ spring:
       max-file-size: 10MB     #单个文件最大限制
       max-request-size: 20MB  #多个文件最大限制
 minio:
-  endpointUrl: http://192.168.160.130:9000
+  endpointUrl: http://192.168.160.130:9001
   accessKey: admin
   secreKey: admin123456
-  bucketName: sph
+  bucketName: tingshu
 vod:
-  appId: 1307503602
-  secretId: AKIDxjGYcR0KPFqBH8j6E7l9ICqFOO9fvwiE
-  secretKey: KPFsGPJyNWQ5WheNq55qMcdOuABwSijU
-  region: ap-guangzhou
+  appId: 1258114864
+  secretId: AKIDAUNI2ciliZ7YyhFbnnZCcrvnW6UDj3DC
+  secretKey: sbAaouqneP3iDmEh4HMI4dTJ2d1DD8tT
+  region: ap-chongqing
   procedure: SimpleAesEncryptPreset #任务流
-  tempPath: /root/tingshu/tempPath
+  tempPath: D:\\java_learn_path\\tingshu-parent
   playKey: wrTwwu8U3DRSRDgC8l7q  #播放加密key

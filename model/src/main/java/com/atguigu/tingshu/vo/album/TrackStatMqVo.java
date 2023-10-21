@@ -14,7 +14,7 @@ public class TrackStatMqVo {
 	private Long albumId;
 
 	@Schema(description = "声音id")
-	private Long tarckId;
+	private Long trackId;
 
 	@Schema(description = "统计类型")
 	private String statType;

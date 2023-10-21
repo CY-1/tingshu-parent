@@ -10,4 +10,10 @@ public interface VodService {
     Map<String, Object> uploadTrack(MultipartFile file);
 
     TrackMediaInfoVo getTrackMediaInfo(String mediaFileId);
+
+    void removeTrack(String mediaFileId);
+
+    TrackMediaInfoVo getMediaInfo(String mediaFileId);
+
+    String getPlayToken(String mediaFileId);
 }

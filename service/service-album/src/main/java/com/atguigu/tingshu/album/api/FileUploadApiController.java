@@ -29,12 +29,12 @@ public class FileUploadApiController {
         String id= UUID.randomUUID().toString();
         InputStream inputStream = file.getInputStream();
         PutObjectArgs putObjectArgs = PutObjectArgs.builder()
-                .bucket("tingshu")
+                .bucket(minioConstantProperties.getBucketName())
                 .stream(inputStream, inputStream.available(), -1)
                 .object("test/" + id+".jpg")
                 .build();
         minioClient.putObject(putObjectArgs);
-        url="http://192.168.160.130:9001/tingshu/"+"test/"+id+".jpg";
+        url=minioConstantProperties.getEndpointUrl()+"/"+minioConstantProperties.getBucketName()+"/test/"+id+".jpg";
         return Result.ok(url);
     }
 

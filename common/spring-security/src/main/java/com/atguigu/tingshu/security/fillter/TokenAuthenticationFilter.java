@@ -49,7 +49,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if(!request.getRequestURI().startsWith("/admin") || antPathMatcher.match("/admin/system/securityLogin/**", uri)) {
 
             //本来没这个
-            SecurityContextHolder.getContext().setAuthentication(getAuthentication(null));
+//            SecurityContextHolder.getContext().setAuthentication(getAuthentication(null));
             chain.doFilter(request, response);
             return;
         }
@@ -64,26 +64,29 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-//        // token置于header里
-//        String token = request.getHeader("token");
-//        logger.info("token:"+token);
-//        if (!StringUtils.isEmpty(token)) {
-//            SysUser sysUser = (SysUser)redisTemplate.opsForValue().get(ADMIN_LOGIN_KEY_PREFIX+token);
-//            logger.info("sysUser:"+JSON.toJSONString(sysUser));
-//            if (null != sysUser) {
-//                AuthContextHolder.setUserId(sysUser.getId());
-//                AuthContextHolder.setUsername(sysUser.getUsername());
-//
-//                if (null != sysUser.getUserPermsList() && sysUser.getUserPermsList().size() > 0) {
-//                    List<SimpleGrantedAuthority> authorities = sysUser.getUserPermsList().stream().filter(code -> !StringUtils.isEmpty(code.trim())).map(code -> new SimpleGrantedAuthority(code.trim())).collect(Collectors.toList());
-//                    return new UsernamePasswordAuthenticationToken(sysUser.getUsername(), null, authorities);
-//                } else {
-//                    return new UsernamePasswordAuthenticationToken(sysUser.getUsername(), null, new ArrayList<>());
-//                }
-//            }
-//        }
-//        return null;
-        AuthContextHolder.setUserId(1L);
-        return new UsernamePasswordAuthenticationToken("213",null,null);
+        // token置于header里
+        String token = request.getHeader("token");
+        logger.info("token:"+token);
+        if (!StringUtils.isEmpty(token)) {
+            SysUser sysUser = (SysUser)redisTemplate.opsForValue().get(ADMIN_LOGIN_KEY_PREFIX+token);
+            logger.info("sysUser:"+JSON.toJSONString(sysUser));
+            if (null != sysUser) {
+                AuthContextHolder.setUserId(sysUser.getId());
+                AuthContextHolder.setUsername(sysUser.getUsername());
+
+                if (null != sysUser.getUserPermsList() && sysUser.getUserPermsList().size() > 0) {
+                    List<SimpleGrantedAuthority> authorities = sysUser.getUserPermsList().stream().filter(code -> !StringUtils.isEmpty(code.trim())).map(code -> new SimpleGrantedAuthority(code.trim())).collect(Collectors.toList());
+                    return new UsernamePasswordAuthenticationToken(sysUser.getUsername(), null, authorities);
+                } else {
+                    return new UsernamePasswordAuthenticationToken(sysUser.getUsername(), null, new ArrayList<>());
+                }
+            }
+        }
+        return null;
+
+
+//        自己设置的跳过
+//        AuthContextHolder.setUserId(1L);
+//        return new UsernamePasswordAuthenticationToken("213",null,null);
     }
 }

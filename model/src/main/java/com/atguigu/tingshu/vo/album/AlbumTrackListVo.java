@@ -31,7 +31,7 @@ public class AlbumTrackListVo {
 	@Schema(description = "发布时间")
 	private Date createTime;
 
-	@Schema(description = "是否显示付费标识，isShowPiadMark=true，则显示付费标识")
-	private Boolean isShowPiadMark = false;
+	@Schema(description = "是否显示付费标识，isShowPaidMark=true，则显示付费标识")
+	private Boolean isShowPaidMark = false;
 
 }
